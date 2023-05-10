@@ -44,7 +44,7 @@ disable_btn = gr.Button.update(interactive=True)
 enable_moderation = False
 models = []
 dbs = []
-vs_list = ["新建知识库"] + get_vector_storelist()
+vs_list = ["New Knowledge Base"] + get_vector_storelist()
 
 priority = {
     "vicuna-13b": "aaa"
@@ -70,7 +70,7 @@ def gen_sqlgen_conversation(dbname):
     schemas = mo.get_schema(dbname)
     for s in schemas:
         message += s["schema_info"] + ";"
-    return f"数据库{dbname}的Schema信息如下: {message}\n"
+    return f"Schema information for database {dbname} is as follows: {message}\n"
 
 def get_database_list():
     mo = MySQLOperator(**DB_SETTINGS)
@@ -156,7 +156,7 @@ def http_bot(state, mode, db_selector, temperature, max_new_tokens, request: gr.
     model_name = LLM_MODEL
 
     dbname = db_selector
-    # TODO 这里的请求需要拼接现有知识库, 使得其根据现有知识库作答, 所以prompt需要继续优化
+    # TODO The request here needs to be concatenated with the existing knowledge base, so that it answers based on the existing knowledge base. Therefore, the prompt needs to be further optimized.
     if state.skip_next:
         # This generate call is skipped due to invalid inputs
         yield (state, state.to_gradio_chatbot()) + (no_change_btn,) * 5
@@ -164,7 +164,7 @@ def http_bot(state, mode, db_selector, temperature, max_new_tokens, request: gr.
 
    
     if len(state.messages) == state.offset + 2:
-        # 第一轮对话需要加入提示Prompt 
+        # First round of conversation requires adding a prompt
         
         template_name = "conv_one_shot"
         new_state = conv_templates[template_name].copy()
@@ -172,8 +172,8 @@ def http_bot(state, mode, db_selector, temperature, max_new_tokens, request: gr.
         
         query = state.messages[-2][1]
 
-        # prompt 中添加上下文提示, 根据已有知识对话, 上下文提示是否也应该放在第一轮, 还是每一轮都添加上下文? 
-        # 如果用户侧的问题跨度很大, 应该每一轮都加提示。
+        # Add context hints to the prompt, have conversations based on existing knowledge, should context hints be added in the first round or in every round?
+        # If the user's questions span a wide range, a prompt should be added in each round.
         if db_selector:
             new_state.append_message(new_state.roles[0], gen_sqlgen_conversation(dbname) + query)
             new_state.append_message(new_state.roles[1], None)
@@ -232,7 +232,7 @@ def http_bot(state, mode, db_selector, temperature, max_new_tokens, request: gr.
     state.messages[-1][-1] = state.messages[-1][-1][:-1]
     yield (state, state.to_gradio_chatbot()) + (enable_btn,) * 5
 
-    # 记录运行日志
+    # Record running logs
     finish_tstamp = time.time()
     logger.info(f"{output}")
 
@@ -268,18 +268,18 @@ def change_tab(tab):
     pass
 
 def change_mode(mode):
-    if mode in ["默认知识库对话", "LLM原生对话"]:
+    if mode in ["Default Knowledge Base Conversation", "LLM Native Conversation"]:
         return gr.update(visible=False)
     else:
         return gr.update(visible=True)
 
 
 def build_single_model_ui():
-   
+
     notice_markdown = """
     # DB-GPT
-    
-    [DB-GPT](https://github.com/csunny/DB-GPT) 是一个实验性的开源应用程序，它基于[FastChat](https://github.com/lm-sys/FastChat)，并使用vicuna-13b作为基础模型。此外，此程序结合了langchain和llama-index基于现有知识库进行In-Context Learning来对其进行数据库相关知识的增强。它可以进行SQL生成、SQL诊断、数据库知识问答等一系列的工作。 总的来说，它是一个用于数据库的复杂且创新的AI工具。如果您对如何在工作中使用或实施DB-GPT有任何具体问题，请联系我, 我会尽力提供帮助, 同时也欢迎大家参与到项目建设中, 做一些有趣的事情。 
+
+    [DB-GPT](https://github.com/csunny/DB-GPT) is an experimental open-source application based on [FastChat](https://github.com/lm-sys/FastChat) and uses vicuna-13b as the underlying model. Moreover, this program combines langchain and llama-index for In-Context Learning based on existing knowledge bases to enhance its database-related knowledge. It can perform tasks such as SQL generation, SQL diagnosis, and database knowledge question-answering. Overall, it is a complex and innovative AI tool for databases. If you have any specific questions about how to use or implement DB-GPT in your work, please contact me. I will do my best to help, and everyone is welcome to participate in the project and do something interesting.
     """
     learn_more_markdown = """ 
         ### Licence
@@ -289,7 +289,7 @@ def build_single_model_ui():
     state = gr.State()
     gr.Markdown(notice_markdown, elem_id="notice_markdown")
 
-    with gr.Accordion("参数", open=False, visible=False) as parameter_row:
+    with gr.Accordion("Parameters", open=False, visible=False) as parameter_row:
         temperature = gr.Slider(
             minimum=0.0,
             maximum=1.0,
@@ -305,45 +305,45 @@ def build_single_model_ui():
             value=512,
             step=64,
             interactive=True,
-            label="最大输出Token数",
+            label="Maximum Output Token Count",
         )
     tabs = gr.Tabs() 
     with tabs:
-        with gr.TabItem("SQL生成与诊断", elem_id="SQL"):
+        with gr.TabItem("SQL Generation and Diagnosis", elem_id="SQL"):
         # TODO A selector to choose database
             with gr.Row(elem_id="db_selector"):
                 db_selector = gr.Dropdown(
-                    label="请选择数据库",
+                    label="Please select a database",
                     choices=dbs,
                     value=dbs[0] if len(models) > 0 else "",
                     interactive=True,
                     show_label=True).style(container=False) 
 
-        with gr.TabItem("知识问答", elem_id="QA"):
+        with gr.TabItem("Knowledge Q&A", elem_id="QA"):
             
-            mode = gr.Radio(["LLM原生对话", "默认知识库对话", "新增知识库对话"], show_label=False, value="LLM原生对话")
-            vs_setting = gr.Accordion("配置知识库", open=False)
+            mode = gr.Radio(["LLM Native Conversation", "Default Knowledge Base Conversation", "Add New Knowledge Base Conversation"], show_label=False, value="LLM Native Conversation")
+            vs_setting = gr.Accordion("Configure Knowledge Base", open=False)
             mode.change(fn=change_mode, inputs=mode, outputs=vs_setting)
             with vs_setting:
-                vs_name = gr.Textbox(label="新知识库名称", lines=1, interactive=True)
-                vs_add = gr.Button("添加为新知识库")
+                vs_name = gr.Textbox(label="New Knowledge Base Name", lines=1, interactive=True)
+                vs_add = gr.Button("Add as New Knowledge Base")
                 with gr.Column() as doc2vec:
-                    gr.Markdown("向知识库中添加文件")
-                    with gr.Tab("上传文件"):
-                        files = gr.File(label="添加文件", 
+                    gr.Markdown("Add files to the knowledge base")
+                    with gr.Tab("Upload Files"):
+                        files = gr.File(label="Add files", 
                                         file_types=[".txt", ".md", ".docx", ".pdf"],
                                         file_count="multiple",
                                         show_label=False
                                         )
 
-                        load_file_button = gr.Button("上传并加载到知识库")
-                    with gr.Tab("上传文件夹"):
-                        folder_files = gr.File(label="添加文件",
+                        load_file_button = gr.Button("Upload and Load into Knowledge Base")
+                    with gr.Tab("Upload Folders"):
+                        folder_files = gr.File(label="Add files",
                                             file_count="directory",
                                             show_label=False)
-                        load_folder_button = gr.Button("上传并加载到知识库")
-       
+                        load_folder_button = gr.Button("Upload and Load into Knowledge Base")
     
+
     with gr.Blocks():
         chatbot = grChatbot(elem_id="chatbot", visible=False).style(height=550)
         with gr.Row():
@@ -354,11 +354,11 @@ def build_single_model_ui():
                     visible=False,
                 ).style(container=False)          
             with gr.Column(scale=2, min_width=50):
-                send_btn = gr.Button(value="发送", visible=False) 
+                send_btn = gr.Button(value="Send", visible=False) 
 
     with gr.Row(visible=False) as button_row:
-        regenerate_btn = gr.Button(value="重新生成", interactive=False)
-        clear_btn = gr.Button(value="清理", interactive=False)
+        regenerate_btn = gr.Button(value="Regenerate", interactive=False)
+        clear_btn = gr.Button(value="Clear", interactive=False)
 
 
     gr.Markdown(learn_more_markdown)
@@ -392,7 +392,7 @@ def build_single_model_ui():
 
 def build_webdemo():
     with gr.Blocks(
-        title="数据库智能助手",
+        title="Database Intelligent Assistant",
         # theme=gr.themes.Base(),
         theme=gr.themes.Default(),
         css=block_css,

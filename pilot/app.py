@@ -53,8 +53,8 @@ if __name__ == "__main__":
     # agent_demo()
 
     with gr.Blocks() as demo:
-        gr.Markdown("Intelligent Database Assistant")
-        with gr.Tab("Knowledge Q&A"):
+        gr.Markdown("数据库智能助手")
+        with gr.Tab("知识问答"):
             text_input = gr.TextArea()
             text_output = gr.TextArea()
             text_button = gr.Button()

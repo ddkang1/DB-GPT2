@@ -40,7 +40,7 @@ class KnownLedge2Vector:
         
     def init_vector_store(self):
         persist_dir = os.path.join(VECTORE_PATH, ".vectordb")
-        print("Vector database persistent directory: ", persist_dir)
+        print("Vector database persistence address: ", persist_dir)
         if os.path.exists(persist_dir):
             # Load from local persistent file
             print("Loading data from local vector...")

@@ -56,11 +56,11 @@ def generate(query):
 if __name__ == "__main__":
     print(LLM_MODEL)
     with gr.Blocks() as demo:
-        gr.Markdown("数据库SQL生成助手")
-        with gr.Tab("SQL生成"):
+        gr.Markdown("Database SQL Generation Assistant")
+        with gr.Tab("SQL Generation"):
             text_input = gr.TextArea()
             text_output = gr.TextArea()
-            text_button = gr.Button("提交")
+            text_button = gr.Button("Submit")
         
 
         text_button.click(generate, inputs=text_input, outputs=text_output)

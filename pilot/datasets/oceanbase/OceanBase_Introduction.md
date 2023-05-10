@@ -1,206 +1,204 @@
-OceanBase 数据库（OceanBase Database）是一款完全自研的企业级原生分布式数据库，在普通硬件上实现金融级高可用，首创“三地五中心”城市级故障自动无损容灾新标准，刷新 TPC-C 标准测试，单集群规模超过 1500 节点，具有云原生、强一致性、高度兼容 Oracle/MySQL 等特性。
+OceanBase Database is a fully self-developed enterprise-level native distributed database that achieves financial-grade high availability on ordinary hardware. It pioneers the "three-zone, five-center" city-level fault-tolerant automatic disaster recovery new standard, refreshing the TPC-C benchmark test with a single cluster scale exceeding 1500 nodes, featuring cloud-native, strong consistency, and high compatibility with Oracle/MySQL.
 
-核心特性
-高可用
-独创 “三地五中心” 容灾架构方案，建立金融行业无损容灾新标准。支持同城/异地容灾，可实现多地多活，满足金融行业 6 级容灾标准（RPO=0，RTO< 8s），数据零丢失。
-高兼容
-高度兼容 Oracle 和 MySQL，覆盖绝大多数常见功能，支持过程语言、触发器等高级特性，提供自动迁移工具，支持迁移评估和反向同步以保障数据迁移安全，可支撑金融、政府、运营商等关键行业核心场景替代。
-水平扩展
-实现透明水平扩展，支持业务快速的扩容缩容，同时通过准内存处理架构实现高性能。支持集群节点超过数千个，单集群最大数据量超过 3PB，最大单表行数达万亿级。
-低成本
-基于 LSM-Tree 的高压缩引擎，存储成本降低 70% - 90%；原生支持多租户架构，同集群可为多个独立业务提供服务，租户间数据隔离，降低部署和运维成本。
-实时 HTAP
-基于“同一份数据，同一个引擎”，同时支持在线实时交易及实时分析两种场景，“一份数据”的多个副本可以存储成多种形态，用于不同工作负载，从根本上保持数据一致性。
-安全可靠
-12 年完全自主研发，代码级可控，自研单机分布式一体化架构，大规模金融核心场景 9 年可靠性验证；完备的角色权限管理体系，数据存储和通信全链路透明加密，支持国密算法，通过等保三级专项合规检测。
-深入了解 OceanBase 数据库
-您可以通过以下内容更深入地了解 OceanBase 数据库：
+Core Features
+High Availability
+The original "three-zone, five-center" disaster recovery architecture solution establishes a new non-destructive disaster recovery standard for the financial industry. It supports same-city/different-city disaster recovery, multi-location and multi-active, meeting the financial industry's 6-level disaster recovery standard (RPO=0, RTO<8s), with zero data loss.
+High Compatibility
+Highly compatible with Oracle and MySQL, covering most common functions, supporting procedural languages, triggers, and other advanced features. It provides automatic migration tools, supports migration evaluation and reverse synchronization to ensure data migration security, and can support the replacement of critical industry core scenarios such as finance, government, and operators.
+Horizontal Scaling
+Transparent horizontal scaling is achieved, supporting rapid expansion and contraction of business. It also achieves high performance through a near-memory processing architecture. The cluster supports thousands of nodes, with a single cluster's maximum data volume exceeding 3PB and the maximum single table row count reaching trillions.
+Low Cost
+Based on the LSM-Tree high compression engine, storage costs are reduced by 70%-90%; native support for multi-tenant architecture, the same cluster can provide services for multiple independent businesses, with data isolation between tenants, reducing deployment and operation costs.
+Real-time HTAP
+Based on "one set of data, one engine," it supports both online real-time transactions and real-time analysis scenarios. Multiple copies of "one set of data" can be stored in various forms for different workloads, fundamentally maintaining data consistency.
+Secure and Reliable
+12 years of fully independent research and development, code-level controllability, self-developed stand-alone distributed integrated architecture, large-scale financial core scenario reliability verification for 9 years; comprehensive role-based access control system, data storage and communication full link transparent encryption, support for national encryption algorithms, and passed the third-level special compliance test for equal protection.
+In-depth understanding of OceanBase Database
+You can learn more about the OceanBase Database through the following content:
 
-OceanBase 使用通用服务器硬件，依赖本地存储，分布式部署使用的多个服务器也是对等的，没有特殊的硬件要求。OceanBase 的分布式数据库处理采用 Shared Nothing 架构，数据库内的 SQL 执行引擎具有分布式执行能力。
+OceanBase uses general-purpose server hardware, relies on local storage, and the multiple servers used for distributed deployment are also peer-to-peer, with no special hardware requirements. OceanBase's distributed database processing adopts a Shared Nothing architecture, and the SQL execution engine within the database has distributed execution capabilities.
 
-OceanBase 在服务器上会运行叫做 observer 的单进程程序作为数据库的运行实例，使用本地的文件存储数据和事务 Redo 日志。
+On the server, OceanBase runs a single-process program called observer as the running instance of the database, using local file storage for data and transaction Redo logs.
 
-OceanBase 集群部署需要配置可用区（Zone），由若干个服务器组成。可用区是一个逻辑概念，表示集群内具有相似硬件可用性的一组节点，它在不同的部署模式下代表不同的含义。例如，当整个集群部署在同一个数据中心（IDC）内的时候，一个可用区的节点可以属于同一个机架，同一个交换机等。当集群分布在多个数据中心的时候，每个可用区可以对应于一个数据中心。
+OceanBase cluster deployment requires configuring availability zones (Zones), composed of several servers. The availability zone is a logical concept, representing a group of nodes within the cluster with similar hardware availability, which has different meanings in different deployment modes. For example, when the entire cluster is deployed within the same data center (IDC), the nodes of an availability zone can belong to the same rack, the same switch, etc. When the cluster is distributed across multiple data centers, each availability zone can correspond to a data center.
 
-用户存储的数据在分布式集群内部可以存储多个副本，用于故障容灾，也可以用于分散读取压力。在一个可用区内部数据只有一个副本，不同的可用区可以存储同一个数据的多个副本，副本之间由共识协议保证数据的一致性。
+User-stored data can store multiple copies within the distributed cluster for fault tolerance and disaster recovery, as well as for dispersing read pressure. There is only one copy of the data within an availability zone, and different availability zones can store multiple copies of the same data, with data consistency guaranteed between replicas by consensus protocols.
 
-OceanBase 内置多租户特性，每个租户对于使用者是一个独立的数据库，一个租户能够在租户级别设置租户的分布式部署方式。租户之间 CPU、内存和 IO 都是隔离的。
+OceanBase has built-in multi-tenant features, where each tenant is an independent database for users. A tenant can set its distributed deployment method at the tenant level. Tenants are isolated from each other in terms of CPU, memory, and IO.
 
-OceanBase的数据库实例内部由不同的组件相互协作，这些组件从底层向上由存储层、复制层、均衡层、事务层、SQL 层、接入层组成。
+OceanBase's database instances internally consist of different components working together. These components are arranged from the bottom up, consisting of storage layer, replication layer, balance layer, transaction layer, SQL layer, and access layer.
 
-存储层
-存储层以一张表或者一个分区为粒度提供数据存储与访问，每个分区对应一个用于存储数据的Tablet（分片），用户定义的非分区表也会对应一个 Tablet。
+Storage layer
+The storage layer provides data storage and access at the granularity of a table or a partition. Each partition corresponds to a Tablet (shard) used for storing data, and non-partitioned user-defined tables also correspond to a Tablet.
 
-Tablet 的内部是分层存储的结构，总共有 4 层。DML 操作插入、更新、删除等首先写入 MemTable，等到 MemTable 达到一定大小时转储到磁盘成为 L0 SSTable。L0 SSTable 个数达到阈值后会将多个 L0 SSTable 合并成一个 L1 SSTable。在每天配置的业务低峰期，系统会将所有的 MemTable、L0 SSTable 和 L1 SSTable 合并成一个 Major SSTable。
+The internal structure of a Tablet is a layered storage structure, with a total of 4 layers. DML operations such as insertions, updates, and deletions are first written to MemTable. When MemTable reaches a certain size, it is dumped to disk as an L0 SSTable. When the number of L0 SSTables reaches the threshold, multiple L0 SSTables are merged into an L1 SSTable. During the configured business off-peak hours every day, the system merges all MemTables, L0 SSTables, and L1 SSTables into a Major SSTable.
 
-每个 SSTable 内部是以 2MB 定长宏块为基本单位，每个宏块内部由多个不定长微块组成。
+Each SSTable internally has 2MB fixed-length macro blocks as the basic unit, and each macro block consists of multiple variable-length micro blocks.
 
-Major SSTable 的微块会在合并过程中用编码方式进行格式转换，微块内的数据会按照列维度分别进行列内的编码，编码规则包括字典/游程/常量/差值等，每一列压缩结束后，还会进一步对多列进行列间等值/子串等规则编码。编码能对数据大幅压缩，同时提炼的列内特征信息还能进一步加速后续的查询速度。
+During the merging process, Major SSTable's micro blocks are converted to a different format using encoding. The data within the micro blocks is encoded column-wise, with encoding rules including dictionary/run-length/constant/delta encoding. After each column is compressed, further inter-column equal value/substring encoding is performed. Encoding can greatly compress data and refine column-level feature information to further accelerate subsequent query speeds.
 
-在编码压缩之后，还可以根据用户指定的通用压缩算法进行无损压缩，进一步提升数据压缩率。
+After encoding compression, lossless compression can be further applied according to the user-specified general compression algorithm, further improving data compression ratio.
 
-复制层
-复制层使用日志流（LS、Log Stream）在多副本之间同步状态。每个 Tablet 都会对应一个确定的日志流，DML 操作写入 Tablet 的数据所产生的 Redo 日志会持久化在日志流中。日志流的多个副本会分布在不同的可用区中，多个副本之间维持了共识算法，选择其中一个副本作为主副本，其他的副本皆为从副本。Tablet 的 DML 和强一致性查询只在其对应的日志流的主副本上进行。
+Replication layer
+The replication layer uses log streams (LS, Log Stream) to synchronize the state among multiple replicas. Each Tablet corresponds to a specific log stream, and Redo logs generated by DML operations written to a Tablet's data are persisted in the log stream. Multiple replicas of a log stream are distributed across different availability zones, and these replicas maintain a consensus algorithm, with one replica chosen as the primary replica and the others as secondary replicas. DML and strongly consistent queries of a Tablet are performed only on the primary replica of the corresponding log stream.
 
-通常情况下，每个租户在每台机器上只会有一个日志流的主副本，可能存在多个其他日志流的从副本。租户的总日志流个数取决于 Primary Zone 和 Locality 的配置。
+Usually, each tenant will have only one primary replica of a log stream on each machine, and there may be multiple secondary replicas of other log streams. The total number of log streams for a tenant depends on the configuration of Primary Zone and Locality.
 
-日志流使用自研的 Paxos 协议将 Redo 日志在本服务器持久化，同时通过网络发送给日志流的从副本，从副本在完成各自持久化后应答主副本，主副本在确认有多数派副本都持久化成功后确认对应的 Redo 日志持久化成功。从副本利用 Redo 日志的内容实时回放，保证自己的状态与主副本一致。
+Log streams use a custom Paxos protocol to persist Redo logs on the local server, and send them to secondary replicas of the log stream via the network. Secondary replicas respond to the primary replica after completing their own persistence. The primary replica confirms the successful persistence of the corresponding Redo logs after verifying that a majority of replicas have persisted successfully. Secondary replicas use the contents of Redo logs to replay in real-time, ensuring their state is consistent with the primary replica.
 
-日志流的主副本在被选举成为主后会获得租约（Lease），正常工作的主副本在租约有效期内会不停的通过选举协议延长租约期。主副本只会在租约有效时执行主的工作，租约机制保证了数据库异常处理的能力。
+After being elected as the primary replica, the log stream's primary replica obtains a lease (Lease). The primary replica in normal operation will continuously extend the lease term through the election protocol during the lease's validity period. The primary replica will only perform primary work while the lease is valid, and the lease mechanism ensures the database's ability to handle exceptions.
 
-复制层能够自动应对服务器故障，保障数据库服务的持续可用。如果出现少于半数的从副本所在服务器出现问题，因为还有多于半数的副本正常工作，数据库的服务不受影响。如果主副本所在服务器出现问题，其租约会得不到延续，待其租约失效后，其他从副本会通过选举协议选举出新的主副本并授予新的租约，之后即可恢复数据库的服务。
+The replication layer can automatically cope with server failures, ensuring the continuous availability of database services. If there are issues with less than half of the secondary replica servers, the database service is not affected because more than half of the replicas are still working normally. If the primary replica server has a problem, its lease will not be renewed. After the lease expires, other secondary replicas will elect a new primary replica through the election protocol and grant a new lease, after which the database service can be restored.
 
-均衡层
-新建表和新增分区时，系统会按照均衡原则选择合适的日志流创建 Tablet。当租户的属性发生变更，新增了机器资源，或者经过长时间使用后，Tablet 在各台机器上不再均衡时，均衡层通过日志流的分裂和合并操作，并在这个过程中配合日志流副本的移动，让数据和服务在多个服务器之间再次均衡。
+Balance layer
+When creating a new table or adding a new partition, the system selects an appropriate log stream to create a Tablet based on the balance principle. When the tenant's properties change, new machine resources are added, or after a long period of use, Tablets become unbalanced across the machines. The balance layer balances data and services among multiple servers again through log stream splitting and merging operations and, during this process, collaborates with the movement of log stream replicas.
 
-当租户有扩容操作，获得更多服务器资源时，均衡层会将租户内已有的日志流进行分裂，并选择合适数量的 Tablet 一同分裂到新的日志流中，再将新日志流迁移到新增的服务器上，以充分利用扩容后的资源。当租户有缩容操作时，均衡层会把需要缩减的服务器上的日志流迁移到其他服务器上，并和其他服务器上已有的日志流进行合并，以缩减机器的资源占用。
+When a tenant expands, obtaining more server resources, the balance layer splits the existing log streams within the tenant, selects an appropriate number of Tablets to split into new log streams, and then migrates the new log streams to the newly added servers to fully utilize the expanded resources. When a tenant shrinks, the balance layer migrates the log streams on the servers to be reduced to other servers and merges them with the existing log streams on other servers to reduce resource usage.
 
-当数据库长期使用后，随着持续创建删除表格，并且写入更多的数据，即使没有服务器资源数量变化，原本均衡的情况可能被破坏。最常见的情况是，当用户删除了一批表格后，删除的表格可能原本聚集在某一些机器上，删除后这些机器上的 Tablet 数量就变少了，应该把其他机器的 Tablet 均衡一些到这些少的机器上。均衡层会定期生成均衡计划，将 Tablet 多的服务器上日志流分裂出临时日志流并携带需要移动的 Tablet，临时日志流迁移到目的服务器后再和目的服务器上的日志流进行合并，以达成均衡的效果。
+After long-term use of the database, the originally balanced state may be disrupted as tables are continuously created and deleted, and more data is written, even if there is no change in the number of server resources. The most common situation is when users delete a batch of tables, which may have originally been concentrated on some machines, causing a reduced number of Tablets on these machines. Other machines' Tablets should be balanced to these machines with fewer Tablets. The balance layer periodically generates balance plans, splitting temporary log streams from log streams on servers with more Tablets, carrying the Tablets to be moved, and merging the temporary log streams with the target server's log streams to achieve a balanced effect.
 
-事务层
-事务层保证了单个日志流和多个日志流DML操作提交的原子性，也保证了并发事务之间的多版本隔离能力。
+Transaction layer
+The transaction layer ensures the atomicity of single and multiple log stream DML operation submissions and guarantees the multi-version isolation capability between concurrent transactions.
 
-原子性
-一个日志流上事务的修改，即使涉及多个 Tablet，通过日志流的 write-ahead log 可以保证事务提交的原子性。事务的修改涉及多个日志流时，每个日志流会产生并持久化各自的write-ahead log，事务层通过优化的两阶段提交协议来保证提交的原子性。
+Atomicity
+For a transaction's modifications on a log stream, even if it involves multiple Tablets, the write-ahead log of the log stream can ensure the atomicity of the transaction submission. When a transaction's modifications involve multiple log streams, each log stream generates and persists its write-ahead log, and the transaction layer ensures submission atomicity through an optimized two-phase commit protocol.
 
-事务层会选择一个事务修改的一个日志流产生协调者状态机，协调者会与事务修改的所有日志流通信，判断 write-ahead log 是否持久化，当所有日志流都完成持久化后，事务进入提交状态，协调者会再驱动所有日志流写下这个事务的 Commit 日志，表示事务最终的提交状态。当从副本回放或者数据库重启时，已经完成提交的事务都会通过 Commit 日志确定各自日志流事务的状态。
+The transaction layer selects one of the transaction's modified log streams to generate a coordinator state machine. The coordinator communicates with all modified log streams of the transaction to determine if the write-ahead log is persisted. When all log streams have completed persistence, the transaction enters the commit state, and the coordinator drives all log streams to write the transaction's Commit log, indicating the final commit state of the transaction. When secondary replicas replay or the database restarts, committed transactions are determined through Commit logs for each log stream's transaction state.
 
-宕机重启场景下，宕机前还未完成的事务，会出现写完 write-ahead log 但是还没有Commit 日志的情况，每个日志流的 write-ahead log 都会包含事务的所有日志流列表，通过此信息可以重新确定哪个日志流是协调者并恢复协调者的状态，再次推进两阶段状态机，直到事务最终的 Commit 或 Abort 状态。
+In the case of a crash-restart scenario, transactions that were not completed before the crash may have written the write-ahead log but not the Commit log. Each log stream's write-ahead log contains a list of all log streams for the transaction, which can be used to re-determine which log stream is the coordinator and restore the coordinator's state, advancing the two-phase state machine again until the transaction reaches the final Commit or Abort state.
 
-隔离性
-GTS 服务是一个租户内产生连续增长的时间戳的服务，其通过多副本保证可用性，底层机制与上面复制层所描述的日志流副本同步机制是一样的。
+Isolation
+The GTS service generates continuously increasing timestamps within a tenant, ensuring availability through multiple replicas. The underlying mechanism is the same as the log stream replica synchronization mechanism described in the replication layer above.
 
-每个事务在提交时会从 GTS 获取一个时间戳作为事务的提交版本号并持久化在日志流的write-ahead log 中，事务内所有修改的数据都以此提交版本号标记。
+Each transaction obtains a timestamp from the GTS when submitting, which serves as the transaction's commit version number and is persisted in the log stream's write-ahead log. All modified data within the transaction is marked with this commit version number.
 
-每个语句开始时（对于 Read Committed 隔离级别）或者每个事务开始时（对于Repeatable Read 和 Serializable 隔离级别）会从 GTS 获取一个时间戳作为语句或事务的读取版本号。在读取数据时，会跳过事务版本号比读取版本号大的数据，通过这种方式为读取操作提供了统一的全局数据快照。
+At the beginning of each statement (for Read Committed isolation level) or each transaction (for Repeatable Read and Serializable isolation levels), a timestamp is obtained from the GTS as the read version number for the statement or transaction. When reading data, data with a transaction version number greater than the read version number is skipped, providing a unified global data snapshot for read operations.
 
-SQL 层
-SQL 层将用户的 SQL 请求转化成对一个或多个 Tablet 的数据访问。
+SQL Layer
+The SQL layer translates user SQL requests into data access for one or more Tablets.
 
-SQL 层组件
-SQL 层处理一个请求的执行流程是：Parser、Resolver、Transformer、Optimizer、Code Generator、Executor。
+SQL Layer Components
+The execution process of the SQL layer for a request includes: Parser, Resolver, Transformer, Optimizer, Code Generator, and Executor.
 
-Parser 负责词法/语法解析，Parser 会将用户的 SQL 分成一个个的 "Token"，并根据预先设定好的语法规则解析整个请求，转换成语法树（Syntax Tree）。
+Parser is responsible for lexical/syntactic parsing. It breaks down user SQL into "Tokens" and parses the entire request according to predefined grammar rules, converting it into a Syntax Tree.
 
-Resolver 负责语义解析，将根据数据库元信息将 SQL 请求中的 Token 翻译成对应的对象（例如库、表、列、索引等），生成的数据结构叫做 Statement Tree。
+Resolver is responsible for semantic analysis, translating Tokens in the SQL request into corresponding objects (such as databases, tables, columns, indexes, etc.) based on database metadata. The generated data structure is called a Statement Tree.
 
-Transformer 负责逻辑改写，根据内部的规则或代价模型，将 SQL 改写为与之等价的其他形式，并将其提供给后续的优化器做进一步的优化。Transformer 的工作方式是在原Statement Tree 上做等价变换，变换的结果仍然是一棵 Statement Tree。
+Transformer is responsible for logical rewriting, transforming the SQL into an equivalent form based on internal rules or cost models and providing it to the subsequent optimizer for further optimization. The Transformer works by making equivalent transformations on the original Statement Tree, and the result is still a Statement Tree.
 
-Optimizer（优化器）为 SQL 请求生成最佳的执行计划，需要综合考虑 SQL 请求的语义、对象数据特征、对象物理分布等多方面因素，解决访问路径选择、联接顺序选择、联接算法选择、分布式计划生成等问题，最终生成执行计划。
+Optimizer generates the best execution plan for the SQL request, considering factors such as SQL semantics, object data characteristics, and object physical distribution. It solves problems like access path selection, join order selection, join algorithm selection, and distributed plan generation, ultimately generating the execution plan.
 
-Code Generator（代码生成器）将执行计划转换为可执行的代码，但是不做任何优化选择。
+Code Generator converts the execution plan into executable code without making any optimization choices.
 
-Executor（执行器）启动 SQL 的执行过程。
+Executor initiates the execution process of SQL.
 
-在标准的 SQL 流程之外，SQL 层还有 Plan Cache 能力，将历史的执行计划缓存在内存中，后续的执行可以反复执行这个计划，避免了重复查询优化的过程。配合 Fast-parser 模块，仅使用词法分析对文本串直接参数化，获取参数化后的文本及常量参数，让 SQL 直接命中 Plan Cache，加速频繁执行的 SQL。
+In addition to the standard SQL process, the SQL layer also has Plan Cache capabilities, caching historical execution plans in memory, allowing subsequent executions to reuse the plan and avoid redundant query optimization. With the Fast-parser module, which uses lexical analysis to directly parameterize text strings and obtain parameterized text and constant parameters, SQL can directly hit the Plan Cache, speeding up the execution of frequent SQL.
 
-多种计划
-SQL 层的执行计划分为本地、远程和分布式三种。本地执行计划只访问本服务器的数据。远程执行计划只访问非本地的一台服务器的数据。分布式计划会访问超过一台服务器的数据，执行计划会分成多个子计划在多个服务器上执行。
+Multiple Plans
+The SQL layer execution plans are divided into local, remote, and distributed plans. Local execution plans only access data on the local server. Remote execution plans only access data on a non-local server. Distributed plans access data on more than one server, and the execution plan is divided into multiple sub-plans that run on multiple servers.
 
-SQL 层并行化执行能力可以将执行计划分解成多个部分，由多个执行线程执行，通过一定的调度的方式，实现执行计划的并行处理。并行化执行可以充分发挥服务器 CPU 和 IO 处理能力，缩短单个查询的响应时间。并行查询技术可以用于分布式执行计划，也可以用于本地执行计划。
+The SQL layer's parallel execution capabilities can break down the execution plan into multiple parts, executed by multiple execution threads, implementing parallel processing of the execution plan through a certain scheduling method. Parallel execution fully utilizes server CPU and IO processing capabilities, shortening the response time of individual queries. Parallel query technology can be applied to distributed execution plans as well as local execution plans.
 
-接入层
-obproxy 是 OceanBase 数据库的接入层，负责将用户的请求转发到合适的 OceanBase 实例上进行处理。
+Access Layer
+obproxy is the access layer of OceanBase database, responsible for forwarding user requests to the appropriate OceanBase instance for processing.
 
-obproxy 是独立的进程实例，独立于 OceanBase 的数据库实例部署。obproxy 监听网络端口，兼容 MySQL 网络协议，支持使用 MySQL 驱动的应用直接连接 OceanBase。
+obproxy is an independent process instance, separate from OceanBase's database instance deployment. obproxy listens to network ports, is compatible with the MySQL network protocol, and supports applications using MySQL drivers to directly connect to OceanBase.
 
-obproxy 能够自动发现 OceanBase 集群的数据分布信息，对于代理的每一条 SQL 语句，会尽可能识别出语句将访问的数据，并将语句直接转发到数据所在服务器的 OceanBase 实例。
+obproxy can automatically discover the data distribution information of the OceanBase cluster. For each SQL statement of the proxy, it will try to identify the data accessed by the statement and forward the statement directly to the OceanBase instance where the data is located.
 
-obproxy 有两种部署方式，一种是部署在每一个需要访问数据库的应用服务器上，另一种是部署在与 OceanBase 相同的机器上。第一种部署方式下，应用程序直接连接部署在同一台服务器上的 obproxy，所有的请求会由 obproxy 发送到合适的 OceanBase 服务器。第二种部署方式下，需要使用网络负载均衡服务将多个 obproxy 聚合成同一个对应用提供服务的入口地址。
+obproxy has two deployment methods. One is to deploy on every application server that needs to access the database, and the other is to deploy on the same machine as OceanBase. In the first deployment method, the application directly connects to the obproxy deployed on the same server, and all requests are sent by obproxy to the appropriate OceanBase server. In the second deployment method, a network load balancing service is required to aggregate multiple obproxies into a single entry address to provide services to applications.
 
-OceanBase 数据库采用 Shared-Nothing 架构，各个节点之间完全对等，每个节点都有自己的 SQL 引擎、存储引擎、事务引擎，运行在普通 PC 服务器组成的集群之上，具备高可扩展性、高可用性、高性能、低成本、与主流数据库高兼容等核心特性。
+OceanBase database adopts a Shared-Nothing architecture, with fully equal nodes. Each node has its own SQL engine, storage engine, and transaction engine, running on a cluster of ordinary PC servers, featuring high scalability, high availability, high performance, low cost, and high compatibility with mainstream databases.
 
-OceanBase 数据库的一个集群由若干个节点组成。这些节点分属于若干个可用区（Zone），每个节点属于一个可用区。可用区是一个逻辑概念，表示集群内具有相似硬件可用性的一组节点，它在不同的部署模式下代表不同的含义。例如，当整个集群部署在同一个数据中心（IDC）内的时候，一个可用区的节点可以属于同一个机架，同一个交换机等。当集群分布在多个数据中心的时候，每个可用区可以对应于一个数据中心。每个可用区具有 IDC 和地域（Region）两个属性，描述该可用区所在的 IDC 及 IDC 所属的地域。一般地，地域指 IDC 所在的城市。可用区的 IDC 和 Region 属性需要反映部署时候的实际情况，以便集群内的自动容灾处理和优化策略能更好地工作。根据业务对数据库系统不同的高可用性需求，OceanBase 集群提供了多种部署模式，参见 高可用架构概述。
+An OceanBase database cluster consists of several nodes. These nodes are divided into several availability zones (Zones), with each node belonging to one availability zone. The availability zone is a logical concept, representing a group of nodes within the cluster with similar hardware availability. It represents different meanings in different deployment modes. For example, when the entire cluster is deployed in the same data center (IDC), the nodes of an availability zone can belong to the same rack, the same switch, etc. When the cluster is distributed across multiple data centers, each availability zone can correspond to a data center. Each availability zone has two attributes, IDC and region (Region), describing the IDC where the availability zone is located and the region to which the IDC belongs. Generally, the region refers to the city where the IDC is located. The IDC and Region attributes of the availability zone need to reflect the actual situation during deployment so that the automatic disaster recovery processing and optimization strategies within the cluster can work better. According to the different high availability requirements of the business for the database system, OceanBase clusters provide a variety of deployment modes. See High Availability Architecture Overview.
 
-在 OceanBase 数据库中，一个表的数据可以按照某种划分规则水平拆分为多个分片，每个分片叫做一个表分区，简称分区（Partition）。某行数据属于且只属于一个分区。分区的规则由用户在建表的时候指定，包括hash、range、list等类型的分区，还支持二级分区。例如，交易库中的订单表，可以先按照用户 ID 划分为若干一级分区，再按照月份把每个一级分区划分为若干二级分区。对于二级分区表，第二级的每个子分区是一个物理分区，而第一级分区只是逻辑概念。一个表的若干个分区可以分布在一个可用区内的多个节点上。每个物理分区有一个用于存储数据的存储层对象，叫做 Tablet ，用于存储有序的数据记录。
+In the OceanBase database, the data of a table can be horizontally split into multiple shards according to a certain partitioning rule. Each shard is called a table partition or simply a partition (Partition). A row of data belongs to and only belongs to one partition. The partition rules are specified by the user when creating the table, including hash, range, list, and other types of partitions, as well as support for secondary partitions. For example, the order table in the transaction library can be divided into several primary partitions according to the user ID, and then each primary partition can be divided into several secondary partitions according to the month. For secondary partition tables, each subpartition of the second level is a physical partition, while the first level partition is just a logical concept. Several partitions of a table can be distributed on multiple nodes within an availability zone. Each physical partition has a storage layer object for storing data called Tablet, used to store ordered data records.
 
-当用户对 Tablet 中记录进行修改的时候，为了保证数据持久化，需要记录重做日志（REDO）到 Tablet 对应的日志流（Log Stream）里。每个日志流服务了其所在节点上的多个 Tablet。为了能够保护数据，并在节点发生故障的时候不中断服务，每个日志流及其所属的 Tablet 有多个副本。一般来说，多个副本分散在多个不同的可用区里。多个副本中有且只有一个副本接受修改操作，叫做主副本（Leader），其他副本叫做从副本（Follower）。主从副本之间通过基于 Multi-Paxos 的分布式共识协议实现了副本之间数据的一致性。当主副本所在节点发生故障的时候，一个从副本会被选举为新的主副本并继续提供服务。
+When users modify records in a Tablet, in order to ensure data persistence, it is necessary to log redo logs (REDO) to the corresponding log stream (Log Stream) of the Tablet. Each log stream serves multiple Tablets on its node. In order to protect data and not interrupt services when a node fails, each log stream and its associated Tablet have multiple replicas. Generally speaking, multiple replicas are distributed across multiple different availability zones. Among the multiple replicas, there is only one replica that accepts modification operations, called the leader replica (Leader), and other replicas are called follower replicas (Follower). Consistency between replicas is achieved through a distributed consensus protocol based on Multi-Paxos between the leader and follower replicas. When the node where the leader replica is located fails, a follower replica will be elected as the new leader replica and continue to provide services.
 
-在集群的每个节点上会运行一个叫做 observer 的服务进程，它内部包含多个操作系统线程。节点的功能都是对等的。每个服务负责自己所在节点上分区数据的存取，也负责路由到本机的 SQL 语句的解析和执行。这些服务进程之间通过 TCP/IP 协议进行通信。同时，每个服务会监听来自外部应用的连接请求，建立连接和数据库会话，并提供数据库服务。关于 observer 服务进程的更多信息，参见 线程简介。
+An observer service process runs on each node in the cluster, containing multiple operating system threads internally. Node functions are all equivalent. Each service is responsible for the storage and retrieval of partitioned data on its node, as well as the parsing and execution of SQL statements routed to the local machine. These service processes communicate with each other through the TCP/IP protocol. At the same time, each service listens for connection requests from external applications, establishes connections and database sessions, and provides database services. For more information on observer service processes, see the thread overview.
 
-为了简化大规模部署多个业务数据库的管理并降低资源成本，OceanBase 数据库提供了独特的多租户特性。在一个 OceanBase 集群内，可以创建很多个互相之间隔离的数据库"实例"，叫做一个租户。从应用程序的视角来看，每个租户是一个独立的数据库。不仅如此，每个租户可以选择 MySQL 或 Oracle 兼容模式。应用连接到 MySQL 租户后，可以在租户下创建用户、database，与一个独立的 MySQL 库的使用体验是一样的。同样的，应用连接到 Oracle 租户后，可以在租户下创建 schema、管理角色等，与一个独立的 Oracle 库的使用体验是一样的。一个新的集群初始化之后，就会存在一个特殊的名为 sys 的租户，叫做系统租户。系统租户中保存了集群的元数据，是一个 MySQL 兼容模式的租户。
+In order to simplify the management of deploying multiple business databases on a large scale and reduce resource costs, the OceanBase database provides a unique multi-tenant feature. Within an OceanBase cluster, many isolated database "instances" can be created, called a tenant. From the perspective of an application, each tenant is an independent database. Moreover, each tenant can choose MySQL or Oracle compatibility mode. When an application connects to a MySQL tenant, it can create users and databases under the tenant, with the same usage experience as an independent MySQL library. Similarly, when an application connects to an Oracle tenant, it can create schemas, manage roles, etc., under the tenant, with the same usage experience as an independent Oracle library. After a new cluster is initialized, a special tenant called sys, known as the system tenant, will exist. The system tenant stores the cluster's metadata and is a MySQL-compatible tenant.
 
-为了隔离租户的资源，每个 observer 进程内可以有多个属于不同租户的虚拟容器，叫做资源单元（UNIT）。每个租户在多个节点上的资源单元组成一个资源池。资源单元包括 CPU 和内存资源。
+To isolate tenant resources, each observer process can have multiple virtual containers belonging to different tenants, called resource units (UNIT). The resource units of each tenant on multiple nodes form a resource pool. Resource units include CPU and memory resources.
 
-为了使 OceanBase 数据库对应用程序屏蔽内部分区和副本分布等细节，使应用访问分布式数据库像访问单机数据库一样简单，我们提供了 obproxy 代理服务。应用程序并不会直接与 OBServer 建立连接，而是连接obproxy，然后由 obproxy 转发 SQL 请求到合适的 OBServer 节点。obproxy 是无状态的服务，多个 obproxy 节点通过网络负载均衡（SLB）对应用提供统一的网络地址。
+In order to shield application programs from the details of internal partitioning and replica distribution, making access to distributed databases as simple as accessing single-machine databases, we provide obproxy proxy services. Application programs do not directly connect to OBServer, but connect to obproxy, which then forwards SQL requests to the appropriate OBServer node. Obproxy is a stateless service, and multiple obproxy nodes provide a unified network address to applications through network load balancing (SLB).
 
+OceanBase database was born with the development of Alibaba's e-commerce business, grew with the development of Ant Group's mobile payment business, and finally broke through and entered the external market after more than a decade of use and polishing in various businesses. This section briefly describes some milestone events in the development process of the OceanBase database.
 
-OceanBase 数据库是随着阿里巴巴电商业务的发展孕育而生，随着蚂蚁集团移动支付业务的发展而壮大，经过十多年各类业务的使用和打磨才终于破茧成蝶，推向了外部市场。本章节简述 OceanBase 数据库发展过程中一些里程碑意义的事件。
+Birth
 
-诞生
+In 2010, Dr. Yang Zhenkun, the founder of OceanBase, led the start-up team to launch the OceanBase project. The first application was Taobao's favorites business. Today, favorites are still OceanBase's customers. The single-table data volume of favorites is very large, and OceanBase uses a unique method to solve the high-concurrency large-table-to-small-table connection requirements.
 
-2010 年，OceanBase 创始人阳振坤博士带领初创团队启动了 OceanBase 项目。第一个应用是淘宝的收藏夹业务。如今收藏夹依然是 OceanBase 的客户。收藏夹单表数据量非常大，OceanBase 用独创的方法解决了其高并发的大表连接小表的需求。
+Relational Database
 
-关系数据库
+In the early versions, applications accessed the OceanBase database through customized API libraries. In 2012, OceanBase released a version supporting SQL, initially becoming a fully functional general relational database.
 
-早期的版本中，应用通过定制的 API 库访问 OceanBase 数据库。2012 年，OceanBase 数据库发布了支持 SQL 的版本，初步成为一个功能完整的通用关系数据库。
+First Try in Financial Services
 
-初试金融业务
+OceanBase entered Alipay (later Ant Group) and began to be applied to financial-grade business scenarios. In the 2014 "Double 11" promotion event, OceanBase started to handle part of the transaction library traffic. Subsequently, the newly established MYbank ran all core transaction libraries on the OceanBase database.
 
-OceanBase 进入支付宝（后来的蚂蚁集团），开始应用于金融级的业务场景。2014 年"双 11"大促活动，OceanBase 开始承担交易库部分流量。此后，新成立的网商银行把所有核心交易库都运行在 OceanBase 数据库上。
+Financial-grade Core Library
 
-金融级核心库
+In 2016, OceanBase released version 1.0 after redesigning the architecture, supporting distributed transactions, improving scalability in high-concurrency write businesses, and implementing a multi-tenant architecture, which continues to this day. At the same time, by 2016's "Double 11", 100% of Alipay's core library business traffic ran on the OceanBase database, including transactions, payments, memberships, and the most important accounting library.
 
-2016 年，OceanBase 数据库发布了架构重新设计后的 1.0 版本，支持了分布式事务，提升了高并发写业务中的扩展，同时实现了多租户架构，这个整体架构延续至今。同时，到 2016 年"双 11"时，支付宝全部核心库的业务流量 100% 运行在 OceanBase 数据库上，包括交易、支付、会员和最重要的账务库。
+Entering the External Market
 
-走向外部市场
+In 2017, OceanBase database began pilot external businesses and successfully applied to Bank of Nanjing.
 
-2017 年，OceanBase 数据库开始试点外部业务，成功应用于南京银行。
+Commercial Acceleration
 
-商业化加速
+In 2018, OceanBase database released version 2.0, starting to support Oracle compatibility mode. This feature reduced application transformation adaptation costs and quickly spread among external customers.
 
-2018 年，OceanBase 数据库发布 2.0 版本，开始支持 Oracle 兼容模式。这一特性降低应用改造适配成本，在外部客户中快速推广开来。
+Climbing to the Peak
 
-勇攀高峰
+In 2019, OceanBase database V2.2 participated in the TPC-C evaluation, representing the most authoritative OLTP database, and ranked first in the world with a score of 60 million tpmC. Subsequently, in 2020, it refreshed the record with 700 million tpmC and still ranks first to this day. This fully demonstrates the excellent scalability and stability of the OceanBase database. OceanBase is the first and only Chinese database product on the TPC-C list to date.
 
-2019 年，OceanBase 数据库 V2.2 版本参加代表 OLTP 数据库最权威的 TPC-C 评测，以 6000 万 tpmC 的成绩登顶世界第一。随后，在 2020 年，又以 7 亿 tpmC 刷新纪录，截止目前依然稳居第一。这充分证明了 OceanBase 数据库优秀的扩展性和稳定性。OceanBase 数据库是第一个也是截止目前唯一一个上榜 TPC-C 的中国数据库产品。
+HTAP Mixed Load
 
-HTAP 混合负载
+In 2021, OceanBase database V3.0, based on a new vectorized execution engine, refreshed the evaluation list with a score of 15.26 million QphH in the TPC-H 30000GB evaluation. This marks a fundamental breakthrough in OceanBase's ability to handle AP and TP mixed loads with one engine.
 
-2021 年，OceanBase 数据库 V3.0 基于全新的向量化执行引擎，在 TPC-H 30000GB 的评测中以 1526 万 QphH 的成绩刷新了评测榜单。这标志着 OceanBase 数据库一套引擎处理 AP 和 TP 混合负载的能力取得了基础性的突破。
+Open Source and Openness
 
-开源开放
+On June 1, 2021, Children's Day, OceanBase database announced full open source, open cooperation, and ecosystem co-construction.
 
-2021 年六一儿童节，OceanBase 数据库宣布全面开源，开放合作，共建生态。
+OceanBase database adopts a single-cluster multi-tenant design, naturally supports cloud database architecture, and supports various deployment forms such as public cloud, private cloud, and hybrid cloud.
 
-OceanBase 数据库采用了单集群多租户设计，天然支持云数据库架构，支持公有云、私有云、混合云等多种部署形式。
+Architecture
 
-架构 
+OceanBase database achieves resource isolation through tenants, making each database service instance unaware of the existence of other instances, and ensures tenant data security through access control. Combined with OceanBase's powerful scalability, it can provide secure and flexible DBaaS services.
 
-OceanBase 数据库通过租户实现资源隔离，让每个数据库服务的实例不感知其他实例的存在，并通过权限控制确保租户数据的安全性，配合 OceanBase 数据库强大的可扩展性，能够提供安全、灵活的 DBaaS 服务。
+Tenant is a logical concept. In OceanBase database, tenant is the unit of resource allocation and the foundation for database object management and resource management. It has a significant impact on system operation and maintenance, especially for cloud database operation and maintenance. To some extent, tenant is equivalent to the traditional database concept of "instance." Tenants are completely isolated from each other. In terms of data security, OceanBase database does not allow cross-tenant data access to ensure that users' data assets are not at risk of being stolen by other tenants. In terms of resource usage, OceanBase database appears as a tenant "exclusive" of its resource quota. Overall, the tenant (tenant) is both a container for various types of database objects and a container for resources (CPU, Memory, IO, etc.).
 
-租户是一个逻辑概念。在 OceanBase 数据库中，租户是资源分配的单位，是数据库对象管理和资源管理的基础，对于系统运维，尤其是对于云数据库的运维有着重要的影响。租户在一定程度上相当于传统数据库的"实例"概念。租户之间是完全隔离的。在数据安全方面，OceanBase 数据库不允许跨租户的数据访问，以确保用户的数据资产没有被其他租户窃取的风险。在资源使用方面，OceanBase 数据库表现为租户"独占"其资源配额。总体上来说，租户（tenant）既是各类数据库对象的容器，又是资源（CPU、Memory、IO 等）的容器。
+OceanBase database can support both MySQL mode and Oracle mode tenants in one system simultaneously. When creating a tenant, users can choose to create a MySQL compatible mode tenant or an Oracle compatible mode tenant. Once the tenant's compatibility mode is determined, it cannot be changed, and all data types, SQL features, views, etc., are consistent with the MySQL database or Oracle database accordingly.
 
-OceanBase 数据库在一个系统中可同时支持 MySQL 模式和 Oracle 模式两种模式的租户。用户在创建租户时，可选择创建 MySQL 兼容模式的租户或 Oracle 兼容模式的租户，租户的兼容模式一经确定就无法更改，所有数据类型、SQL 功能、视图等相应地与 MySQL 数据库或 Oracle 数据库保持一致。
+MySQL Mode
+MySQL mode is a tenant type function supported by OceanBase database to reduce the cost of business system transformation caused by migrating MySQL database to OceanBase database. It allows database designers, developers, and administrators to reuse accumulated MySQL database technology knowledge and experience and quickly get started with OceanBase database. OceanBase database's MySQL mode is compatible with most functions and syntax of MySQL 5.7, as well as full compatibility with MySQL 5.7 and partial JSON functions of version 8.0. Applications based on MySQL can be smoothly migrated.
 
+Oracle Mode
+OceanBase database has supported Oracle compatibility mode since version V2.x.x. Oracle mode is a tenant type function supported by OceanBase database to reduce the cost of business system transformation caused by migrating Oracle database to OceanBase database. It allows database design developers and administrators to reuse accumulated Oracle database technology knowledge and experience and quickly get started with OceanBase database. Oracle mode currently supports most Oracle syntax and procedural language functions, enabling most Oracle businesses to be automatically migrated with minimal modifications.
 
-MySQL 模式
-MySQL 模式是为降低 MySQL 数据库迁移至 OceanBase 数据库所引发的业务系统改造成本，同时使业务数据库设计人员、开发人员、数据库管理员等可复用积累的 MySQL 数据库技术知识经验，并能快速上手 OceanBase 数据库而支持的一种租户类型功能。OceanBase 数据库的 MySQL 模式兼容 MySQL 5.7 的绝大部分功能和语法，兼容 MySQL 5.7 版本的全量以及 8.0 版本的部分 JSON 函数，基于 MySQL 的应用能够平滑迁移。
+OceanBase database is a multi-tenant architecture. In version V4.0.0 and earlier, only two types of tenants were supported: system tenants and user tenants. From version V4.0.0, the concept of Meta tenant was introduced. Therefore, there are currently three types of tenants visible to users: system tenants, user tenants, and Meta tenants.
 
-Oracle 模式
-OceanBase 数据库从 V2.x.x 版本开始支持 Oracle 兼容模式。Oracle 模式是为降低 Oracle 数据库迁移 OceanBase 数据库的业务系统改造成本，同时使业务数据库设计开发人员、数据库管理员等可复用积累的 Oracle 数据库技术知识经验，并能快速上手 OceanBase 数据库而支持的一种租户类型功能。Oracle 模式目前能够支持绝大部分的 Oracle 语法和过程性语言功能，可以做到大部分的 Oracle 业务进行少量修改后的自动迁移。
+System Tenant
+The system tenant is the default tenant created with the cluster and has the same lifecycle as the cluster. It is responsible for managing the lifecycle of the cluster and all tenants. The system tenant has only one log stream and supports single-point writes without scalability.
 
-OceanBase 数据库是多租户架构。在 V4.0.0 版本之前，仅支持两种类型的租户：系统租户和用户租户。从 V4.0.0 版本开始，引入了 Meta 租户概念。因此，当前版本对用户可见的租户有三种类型：系统租户、用户租户以及 Meta 租户。
+System tenants can create user tables, and all user table and system table data are served by log stream 1. System tenant data is private to the cluster and does not support physical synchronization and backup recovery between primary and standby clusters.
 
-系统租户
-系统租户是集群默认创建的租户，与集群的生命周期一致，负责管理集群和所有租户的生命周期。系统租户仅有一个 1 号日志流，仅支持单点写入，不具备扩展能力。
+User Tenant
+User tenants are tenants created by users, providing complete database functionality and supporting both MySQL and Oracle compatibility modes. User tenants support horizontal scalability of service capabilities to multiple machines, support dynamic expansion and contraction, and automatically create and delete log streams based on user configurations.
 
-系统租户可以创建用户表，所有的用户表和系统表数据均由 1 号日志流服务。系统租户的数据是集群私有的，不支持主备集群物理同步和物理备份恢复。
+User tenant data has stronger data protection and availability requirements, supporting cross-cluster physical synchronization and backup recovery. Typical data includes Schema data, user table data, and transaction data.
 
-用户租户
-用户租户是由用户创建的租户，对外提供完整的数据库功能，支持 MySQL 和 Oracle 两种兼容模式。用户租户支持服务能力水平扩展到多台机器上，支持动态扩容和缩容，内部会根据用户的配置自动创建和删除日志流。
+Meta Tenant
+Meta tenant is a tenant that OceanBase database internally manages, and a corresponding Meta tenant is automatically created for each user tenant created by the system, with a consistent life cycle with the user tenant.
 
-用户租户的数据有更强的数据保护和可用性要求，支持跨集群物理同步和物理备份恢复，典型数据包括：Schema 数据、用户表数据及事务数据等。
-Meta 租户
-Meta 租户是 OceanBase 数据库内部自管理的租户，每创建一个用户租户系统就会自动创建一个对应的 Meta 租户，其生命期与用户租户保持一致。
+Meta tenant is used to store and manage user tenant's cluster private data, which does not require cross-database physical synchronization and physical backup recovery. This data includes: configuration items, location information, replica information, log stream status, backup recovery related information, merge information, etc.
 
-Meta 租户用于存储和管理用户租户的集群私有数据，这部分数据不需要进行跨库物理同步以及物理备份恢复，这些数据包括：配置项、位置信息、副本信息、日志流状态、备份恢复相关信息、合并信息等。
+Tenant Comparison
+From the user's perspective, the differences between system tenants, user tenants, and Meta tenants are shown in the table below.
+OceanBase database is a multi-tenant database system, and a cluster can contain multiple independent tenants, each providing independent database services. In OceanBase database, the concepts of resource configuration (unit_config), resource pool (Resource Pool), and resource unit (Unit) are used to manage the available resources for each tenant.
 
-租户对比
-从用户角度来看，系统租户、用户租户和 Meta 租户的差异性如下表所示。
-OceanBase 数据库是多租户的数据库系统，一个集群内可包含多个相互独立的租户，每个租户提供独立的数据库服务。在 OceanBase 数据库中，使用资源配置（unit_config）、资源池（Resource Pool）和资源单元（Unit）三个概念，对各租户的可用资源进行管理。
+Before creating a tenant, it is necessary to determine the tenant's resource configuration and resource usage scope. The general process of creating a tenant is as follows:
 
-
-创建租户前，需首先确定租户的资源配置、使用资源范围等。租户创建的通用流程如下：
-
-资源配置是描述资源池的配置信息，用来描述资源池中每个资源单元可用的 CPU、内存、存储空间和 IOPS 等的规格。修改资源配置可动态调整资源单元的规格。这里需要注意，资源配置指定的是对应资源单元能够提供的服务能力，而不是资源单元的实时负载。 创建资源配置的示例语句如下：
+Resource configuration is the configuration information describing the resource pool, used to describe the specifications of CPU, memory, storage space, and IOPS available for each resource unit in the resource pool. Modifying the resource configuration can dynamically adjust the specifications of the resource unit. It should be noted that the resource configuration specifies the service capability provided by the corresponding resource unit, not the real-time load of the resource unit. The example statement for creating a resource configuration is as follows:
