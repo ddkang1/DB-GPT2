@@ -38,10 +38,9 @@ def knownledge_tovec_st(filename):
     docsearch = Chroma.from_texts(texts, embeddings, metadatas=[{"source": str(i)} for i in range(len(texts))])
     return docsearch
 
-
 def load_knownledge_from_doc():
-    """从数据集当中加载知识 
-    # TODO 如果向量存储已经存在, 则无需初始化
+    """Load knowledge from the dataset
+    # TODO If the vector storage already exists, initialization is not necessary
     """
 
     if not os.path.exists(DATASETS_DIR):

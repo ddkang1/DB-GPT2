@@ -99,7 +99,7 @@ def gen_sqlgen_conversation(dbname):
     schemas = mo.get_schema(dbname)
     for s in schemas:
         message += s["schema_info"] + ";"
-    return f"数据库{dbname}的Schema信息如下: {message}\n"
+    return f"The Schema information of the database {dbname} is as follows: {message}\n"
 
 conv_one_shot = Conversation(
     system="A chat between a curious human and an artificial intelligence assistant, who very familiar with database related knowledge. "
@@ -147,21 +147,21 @@ conv_vicuna_v1 = Conversation(
 )
 
 
-conv_qa_prompt_template = """ 基于以下已知的信息, 专业、详细的回答用户的问题。
-            如果无法从提供的恶内容中获取答案, 请说: "知识库中提供的内容不足以回答此问题", 但是你可以给出一些与问题相关答案的建议:   
-            
-            已知内容: 
+conv_qa_prompt_template = """ Based on the following known information, provide a professional and detailed answer to the user's question. 
+            If you cannot obtain the answer from the provided content, please say: "The content provided in the knowledge base is not sufficient to answer this question", but you can give some suggestions related to the question:
+
+            Known content:
             {context}
-            问题:
+            Question:
             {question}
 """
 
 default_conversation = conv_one_shot
 
 conversation_types = {
-    "native": "LLM原生对话",
-    "default_knownledge": "默认知识库对话",
-    "custome":  "新增知识库对话",
+    "native": "LLM native conversation",
+    "default_knownledge": "Default knowledge base conversation",
+    "custom":  "New knowledge base conversation",
 }
 
 conv_templates = {
